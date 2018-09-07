@@ -16,8 +16,8 @@
 *Thinkphp 5.1.8*  
 后台管理系统的基本操作,可用于后期扩展开发  
 
-[php 常用类](https://github.com/xue-y/PhpClass)
-*php*
-验证码类;备份还原mysql数据类(不包括库,只限于数据表);数组与其他格式数据互转类
+[php 常用类](https://github.com/xue-y/PhpClass)  
+*php*   
+验证码类;备份还原mysql数据类(不包括库,只限于数据表);数组与其他格式数据互转类  
 
 
