@@ -20,4 +20,7 @@
 *php*   
 验证码类;备份还原mysql数据类(不包括库,只限于数据表);数组与其他格式数据互转类  
 
+### [web 应用](https://github.com/xue-y/web/tree/master)  
+*css js jquery wx*  
+js插件函数;微信登录  
 
