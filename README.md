@@ -1,37 +1,18 @@
-## Welcome to GitHub Pages
+## 项目列表
 
-You can use the [editor on GitHub](https://github.com/xue-y/xue-y.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+[随机分配任务](https://github.com/xue-y/php/tree/master/allot)
+php ajax 
+用于多人多个任务 一个人只可点击选择一次，点击用户点击到的就是自己所要做的任务
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+[OA任务平台](https://github.com/xue-y/php/tree/master/renwu)
+Thinkphp 3.2.3 
+系统用于公司内部各部门问题---统计
 
-### Markdown
+[客户管理系统](https://github.com/xue-y/php/tree/master/fenxiao)
+Thinkphp 3.2.3 
+简易版二级分销,管理员分配账号给客户,客户登录自己的账号推荐好友消费
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+[后台管理系统](https://github.com/xue-y/php/tree/master/backsys)
+Thinkphp 5.1.8
+后台管理系统的基本操作,可用于后期扩展开发
 
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/xue-y/xue-y.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
