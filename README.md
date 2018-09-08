@@ -4,6 +4,10 @@
 *php* *ajax*   
 用于多人多个任务 一个人只可点击选择一次，点击用户点击到的就是自己所要做的任务  
 
+### [分组查看项目表](https://github.com/xue-y/php/tree/master/itemprice) 
+*php*
+不同的营销组访问同样的页面显示不同的项目、产品价格  
+
 ### [OA任务平台](https://github.com/xue-y/php/tree/master/renwu)  
 *Thinkphp 3.2.3*   
 系统用于公司内部各部门问题---统计  
@@ -19,6 +23,10 @@
 ### [php 常用类](https://github.com/xue-y/PhpClass)  
 *php*   
 验证码类;备份还原mysql数据类(不包括库,只限于数据表);数组与其他格式数据互转类  
+
+### [php 发送邮件]  
+*php*  
+第一个版发送单人邮件附件;第二版本批量发送邮件附件   
 
 ### [web 应用](https://github.com/xue-y/web/tree/master)  
 *css js jquery wx*  
