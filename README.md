@@ -22,13 +22,13 @@
 
 ### [php 常用类](https://github.com/xue-y/PhpClass)  
 *php*   
-验证码类;备份还原mysql数据类(不包括库,只限于数据表);数组与其他格式数据互转类  
+验证码类; 备份还原mysql数据类(不包括库,只限于数据表); 数组与其他格式数据互转类  
 
 ### [php 发送邮件](https://github.com/xue-y/email)  
 *php*  
-第一个版发送单人邮件附件;第二版本批量发送邮件附件   
+第一个版发送单人邮件附件; 第二版本批量发送邮件附件   
 
 ### [web 应用](https://github.com/xue-y/web/tree/master)  
 *css js jquery wx*  
-js插件函数;微信登录  
+js插件函数; 微信登录  
 
