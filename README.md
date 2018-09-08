@@ -26,7 +26,7 @@
 
 ### [php 发送邮件](https://github.com/xue-y/email)  
 *php*  
-第一个版发送单人邮件附件; 第二版本批量发送邮件附件   
+v1.0 发送单人邮件附件; v2.0 批量发送邮件附件   
 
 ### [web 应用](https://github.com/xue-y/web/tree/master)  
 *css js jquery wx*  
