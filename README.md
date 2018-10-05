@@ -16,9 +16,9 @@
 *Thinkphp 3.2.3*    
 简易版二级分销,管理员分配账号给客户,客户登录自己的账号推荐好友消费   
 
-### [后台管理系统](https://github.com/xue-y/php/tree/master/backsys)   
-*Thinkphp 5.1.8*  
-后台管理系统的基本操作,可用于后期扩展开发  
+### [MySql 数据备份还原](https://github.com/xue-y/backrestore)   
+*php*  
+使用原生php实现mysql数据备份、还原/导入，支持mysql、pdo 两种连接方式  
 
 ### [php 常用类](https://github.com/xue-y/PhpClass)  
 *php*   
