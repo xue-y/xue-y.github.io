@@ -20,7 +20,7 @@
 *php*  
 使用原生php实现mysql数据备份、还原/导入，支持mysql、pdo 两种连接方式  
 
-### [php 常用类](https://github.com/xue-y/PhpClass)  
+### [PHP 生成 MySql 数据库字典 ](https://github.com/xue-y/dictionary)  
 *php*   
 验证码类; 备份还原mysql数据类(不包括库,只限于数据表); 数组与其他格式数据互转类  
 
