@@ -4,7 +4,7 @@
 *php* *ajax*   
 用于多人多个任务 一个人只可点击选择一次，点击用户点击到的就是自己所要做的任务  
 
-### [分组查看项目表](https://github.com/xue-y/php/tree/master/itemprice) 
+### [分组查看产品表](https://github.com/xue-y/php/tree/master/itemprice) 
 *php*
 不同的营销组访问同样的页面显示不同的项目、产品价格  
 
