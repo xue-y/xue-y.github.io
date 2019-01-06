@@ -2,7 +2,7 @@
 
 ### [后台管理系统](https://github.com/xue-y/websystem)  
 *Thinkphp 5.1.28*   
-后台管理系统，已包括基本操作，可以直接在此基础上直接扩展新的模块
+后台管理系统，已包括基本操作，可以在此系统上直接扩展新的模块
 
 ### [随机分配任务](https://github.com/xue-y/php/tree/master/allot)  
 *php* *ajax*   
