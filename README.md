@@ -1,8 +1,12 @@
 ## 项目列表
 
+### [后台管理系统](https://github.com/xue-y/websystem)  
+*Thinkphp 5.1.28*   
+后台管理系统，已包括基本操作，可以直接在此基础上直接扩展新的模块
+
 ### [随机分配任务](https://github.com/xue-y/php/tree/master/allot)  
 *php* *ajax*   
-用于多人多个任务 一个人只可点击选择一次，点击用户点击到的就是自己所要做的任务  
+用于多人多个任务 一个人只可点击选择一次，点击用户点击到的就是自己所要执行的任务  
 
 ### [分组查看产品表](https://github.com/xue-y/php/tree/master/itemprice) 
 *php*
