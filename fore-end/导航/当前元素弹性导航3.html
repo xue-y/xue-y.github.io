@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+<meta name="description" content="描述">
+<meta name="keywords" content="关键词1,关键词2">
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+<script src="../js/jq_tween.js"></script>
+<title>导航栏</title>
+<style>
+#box{height:50px;position:relative;background:#f90;overflow: hidden;margin:50px auto;}
+#box ul,#box li{margin:0px; padding:0px;}
+#box #bar{width:64px;height:100%;position:absolute;left:0;top:0;background:#333;}
+#box #bar .bar-l{width:0;height:100%;background:#333;border-radius:50%;position:absolute;top:0;left:0;}
+#box #bar .bar-r{width:0;height:100%;background:#333;border-radius:50%;position:absolute;top:0;right:0;}
+#box ul{height:100%;font-size:14px;letter-spacing:1px;font-family:"微软雅黑";list-style:none;position:relative;width:auto;}
+#box ul li{height:100%;line-height:50px;float:left;}
+#box ul a{height:100%;text-decoration:none;color:#fff;padding:0 20px;display:block;}
+</style>
+</head>
+<body>
+<div id="box">		
+	<div id="bar"></div>
+	<ul id="ul">
+		<li><a href="#1">祝</a></li>
+		<li><a href="#2">大家</a></li>
+		<li><a href="#3">在2018</a></li>
+		<li><a href="#4">能顺利</a></li>
+		<li><a href="#5">掌握</a></li>
+		<li><a href="#6">javaScript</a></li>
+	</ul>
+</div>
+
+<script>
+
+$(function(){
+	var nav_bg=$("#bar"),
+	aLi=$("#ul").children('li');
+	nav_elastic(aLi,nav_bg);
+	
+	/*
+	nav_ele  导航元素集合
+	nav_bg   导航背景	
+	now_pos  鼠标离开回到选中位置 默认FALSE
+	now      当前第几个高亮 默认0 第一个
+	*/
+	function nav_elastic(nav_ele,nav_bg,now_pos,now)
+	{
+		// 判断值
+		if(arguments.length<2)
+		{
+			console.log('导航元素，滑动元素不得为空');
+			return;
+		}
+	
+		if(!now) //typeof now =='undefined'
+			now=0;
+		else
+		{
+			now=Math.max(0,parseInt(now));
+			now=Math.min(nav_ele.length-1,now);
+		}
+			
+		// 创建元素	
+		nav_bg.append('<div class="bar-l"></div>');
+		nav_bg.append('<div class="bar-r"></div>');
+		oLeft=nav_bg.find(".bar-l"),
+		oRight=nav_bg.find(".bar-r"),
+		
+	    nav_bg.css({'left':nav_ele.eq(now).position().left,'width':nav_ele.eq(now).innerWidth()});
+		
+		if(now_pos == true)
+		{	
+			nav_ele.each(function(i,ele){
+				var _index=i;
+				$(this).mouseenter(function(){
+					if(now==_index) return;
+					lesgo($(this));
+				}
+			  ); // 事件结束 
+			}); // each 结束
+			
+			nav_bg.parent().mouseleave(function(){
+				lesgo(nav_ele.eq(now));
+			});
+		}else
+		{
+			nav_ele.each(function(i,ele){
+				var _index=i;
+				$(this).mouseenter(function(){
+					if(now==_index) return;
+					lesgo($(this));
+				    now=_index;
+				});
+			});
+		}
+		
+
+		//效果主要函数
+		function lesgo(oLi)
+		{
+			var t=Math.abs(oLi.position().left-nav_bg.offset().left)*0.7;
+			
+			nav_bg.stop().animate({left:oLi.position().left,width:oLi.innerWidth()},t,"easeOut",function(){
+				oRight.stop().animate({width:0,right:0},80,"linear",function(){
+					oRight.css('background-color',"#f90");
+					oRight.stop().animate({width:20,right:-10},80,"linear",function(){
+						oRight.stop().animate({width:0,right:0},50,"linear");
+					});
+				});
+				oLeft.stop().animate({width:0,left:0},80,"linear",function(){
+					oLeft.css('background-color',"#f90")
+					oLeft.stop().animate({width:20,left:-10},80,"linear",function(){
+						oLeft.stop().animate({width:0,left:0},50,"linear");
+					});
+				});
+			});
+			// iNow++
+			if(oLi.position().left > nav_bg.position().left){
+				setColor('#333','#f90');
+			// iNow--
+			}else if(oLi.position().left < nav_bg.position().left){
+				setColor('#f90','#333');
+			}
+			
+			function setColor(color1,color2)
+			{
+				oRight.css('background-color',color1);
+				oLeft.css('background-color',color2);
+				oRight.stop().animate({width:40,right:-20},t);
+				oLeft.stop().animate({width:40,left:-20},t);
+			}
+		}			
+	}
+});
+</script>
+</body>
+</html>

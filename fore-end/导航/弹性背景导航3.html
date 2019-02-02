@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>弹性运动---弹性菜单</title>
+    <style>
+
+	#nav{ margin: 100px auto 0;  position: relative; width:600px; }
+	#nav *{ padding:0px; margin:0px;box-sizing:border-box;}
+    #nav ul { 
+        list-style: none;
+        height: 50px;left:50%;
+           
+    }
+    #nav li {
+        float: left;
+        padding:0px 30px;
+        height: 50px;
+        line-height: 50px;
+        border: 1px solid #ccc;
+        text-align: center;
+        z-index: 2;
+        position: relative;
+        cursor: pointer;
+    }
+	#nav>.nav_bg {
+        width: 0px;
+        height: 3px;
+        overflow: hidden;
+        background: #1db0ea;
+        border: none;
+        position: absolute;
+        bottom: 0px;
+        left: 0;
+        z-index: 2;
+    }
+</style>
+<script type="text/javascript">
+    window.onload=function ()
+    {
+        var nav=document.getElementById('nav');
+        var aLi=nav.getElementsByTagName('li');
+        var oBg=nav.getElementsByClassName("nav_bg")[0];
+		// 调用
+        nav_elastic(aLi,oBg,true,3);
+	
+    };
+
+	/*封装函数
+	nav_ele 导航元素集合
+	nav_bg  导航滑动背景元素
+	now_pos 鼠标离开回到选中位置 默认FALSE
+	now 	选中导航    默认 0
+	*/
+	function nav_elastic(nav_ele,nav_bg,now_pos,now)
+	{
+		// 判断值
+		if(arguments.length<2)
+		{
+			console.log('导航元素，滑动元素不得为空');
+			return;
+		}
+	
+		if(!now)
+			now=0;
+		else
+		{
+			now=Math.max(0,parseInt(now));
+			now=Math.min(nav_ele.length-1,now);
+		}
+		
+		// 设置背景初始位置
+		nav_bg.style.left=nav_ele[now].offsetLeft+'px';
+		nav_bg.style.width=css(nav_ele[now],'width');
+		
+		// 事件
+		if(now_pos==true)
+		{
+			for(i=0;i<nav_ele.length;i++)
+			{
+				nav_ele[i].index=i;
+				nav_ele[i].onmouseover=function ()
+				{ // 移动的元素 当前对象  移动的属性
+					startMove(nav_bg, this, 'left')
+				};				
+			}
+			// 鼠标离开回到选中位置
+			nav_bg.parentNode.onmouseout=function()
+			{
+				startMove(nav_bg, nav_ele[now],'left')
+			}
+		}else
+		{
+			for(i=0;i<nav_ele.length;i++)
+			{
+				nav_ele[i].index=i;
+				nav_ele[i].onmouseover=function ()
+				{ // 移动的元素 当前对象  移动的属性
+					startMove(nav_bg, this, 'left');
+					now=this.index;
+				}
+			}
+		}
+
+		// (移动的元素,当前对象,移动的属性)
+		function startMove(obj, index, attr)
+		{
+			iTarget=index.offsetLeft;
+			obj.attr_name=parseInt(css(obj, attr));
+
+			// 如果选择的是当前的选中的元素
+			if(iTarget==obj.attr_name)
+				return; 
+
+			// 移动元素属性设置		
+			obj.style.width=css(index,'width');	
+			
+			  // 防止开启多次定时器 
+			 clearInterval(obj.timer);
+			
+			obj.iSpeed=0;
+			var iSpeed_dis=5;// 速度比值
+			var mc =0.7 ; // 摩擦大小 值越大元素停止运动时间越长 值越小元素停止运动的时间越快
+		  
+			 obj.timer=setInterval(backOut, 30);
+			 
+			// 弹性运动
+			function backOut()
+			{
+				// 加、减速运动 iTarget>obj.offsetLeft加速运动  iTarget<obj.offsetLeft减速运动
+				obj.iSpeed+=(iTarget-obj.attr_name)/iSpeed_dis; 
+				// 摩擦运动 让元素停止运动
+				obj.iSpeed*=mc; 
+				obj.attr_name+=obj.iSpeed; // 防止小数误差 ispeed 不是整数 ，把 obj.iSpeed 小数保留下来
+				//运动速度小1 并且目标点与元素距离小于1 停止运动
+				if(Math.abs(obj.iSpeed)<=1 && Math.abs(obj.attr_name-iTarget)<=1)
+				{
+					obj.style[attr]=iTarget+'px';
+					clearInterval(obj.timer);  
+				}
+				else
+				{
+					obj.style[attr]= obj.attr_name+'px';
+				}
+			} //------------------ backOut() 结束
+		}
+		// 获取样式
+		function css(t, n) 
+		{
+			return t.currentStyle ? t.currentStyle[n] : getComputedStyle(t, !1)[n]
+		}
+	}
+</script>
+</head>
+
+<body>
+	<div id="nav">
+		  <ul>
+			  <li>首页</li>
+			  <li>关于我们</li>
+			  <li>产品</li>
+			  <li>联系方式</li>		
+		 </ul>
+		 <div class="nav_bg"></div>
+	</div>
+  
+</body>
+</html>

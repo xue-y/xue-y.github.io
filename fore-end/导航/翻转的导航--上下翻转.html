@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>翻转的导航--自下而上</title>
+	<style type="text/css">
+	.f_nav{width:500px; list-style: none; margin:100px auto;}	
+	.f_nav li{float:left;width:90px; height: 30px; line-height: 30px;perspective: 100px; }
+	.f_nav li a{display: block;text-align: center; position: relative; text-decoration: none; transform-style: preserve-3d;
+		transform-origin: center center -15px; transition: 0.5s;  height: 30px;}
+	.f_nav li span{width:100%;  float: left; }
+	.f_nav li span:nth-of-type(1){color:#333; background-color: #999;}
+	
+	/* top 值 与 span 高度一致*/
+	/*  从下向上 */
+	/*
+	.f_nav li span:nth-of-type(2){color:#fff;background-color: #333; position: absolute;left:0px; top:30px; transform-origin: top;  transform: rotateX(-90deg); }
+	.f_nav li a:hover{transform: rotateX(90deg);  } */
+
+	/*  从上向下 */	
+	.f_nav li span:nth-of-type(2){color:#fff;background-color: #333; position: absolute;left:0px; top:-30px; transform-origin: bottom;  transform: rotateX(90deg); }
+	.f_nav li a:hover{transform: rotateX(-90deg);  } 
+	</style>
+</head>
+<body>
+	<ul class="f_nav">
+		<li><a href=""><span>1111</span><span>aaaa</span></a></li>
+		<li><a href=""><span>2222</span><span>bbbb</span></a></li>
+		<li><a href=""><span>3333</span><span>cccc</span></a></li>
+		<li><a href=""><span>4444</span><span>dddd</span></a></li>
+		<li><a href=""><span>5555</span><span>eeee</span></a></li>
+	</ul>
+</body>
+</html>

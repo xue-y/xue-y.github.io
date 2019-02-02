@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>svg </title>
+	<style>
+	circle{ transform:rotate(-90deg);transform-origin:50% 49.7%;}
+	</style>
+    <script>
+    window.onload=function(){
+		// 获取元素
+		var idtxt=document.getElementById('txt');		
+		var progrees=document.getElementById('progress');
+		load_svg(progrees,5000,null,0.1,0.7);
+	
+	};
+	
+	/* 封装函数
+	svg_img 图像元素
+	total_t 运动总的时间
+	text 文本百分比，如果不需要可以不传参，文本元素为svg 里的 text标签元素
+	start_n 开始百分比 0-1
+	end_n 结束百分比  0-1
+	*/
+	function load_svg(svg_img,total_t,text,start_n,end_n)
+	{
+		// 判断元素
+		if(!svg_img)
+		{
+			console.log('图像元素不得为空');
+			return;
+		}
+		
+		// 设置初始值
+	    var ele_length=svg_img.getTotalLength()// 长度
+		
+		// strokeDasharray  第一个为虚线的长度，第二个是虚线之间的间距
+		svg_img.style.strokeDasharray=ele_length;
+		
+		
+		// strokeDashoffset 这个值如果等于周长, 不显示元素，如果等于0 显示全部
+		// 开始百分比
+		if(typeof start_n =='undefined')
+		{
+			svg_img.style.strokeDashoffset=ele_length;
+		}
+		
+		else
+		{
+			ele_length=ele_length*(1-parseFloat(start_n));
+			svg_img.style.strokeDashoffset=ele_length
+		}
+		
+		// 结束百分比
+		if(!end_n)
+		{
+			end_n=1
+		}else
+		{
+			end_n=ele_length*(1-parseFloat(end_n));
+		}
+		
+		if(start_n==end_n)
+			return;
+		
+		
+		// 判断浏览器是否支持 requestAnimationFrame 运动
+		if (!window.requestAnimationFrame) 
+		{
+			requestAnimationFrame = function(fn) {
+				setTimeout(fn, 17);
+			};    
+		}
+		if (!window.cancelAnimationFrame) 
+		{
+			window.cancelAnimationFrame = function(id) {
+				clearTimeout(id);
+			};
+		}
+	
+		
+		// 初始化 时间、 变化的长度
+		var timer = n = null;	
+	
+		// 获取当前毫秒数
+		var startTime = +new Date();    
+		
+		// b ->当前位置  d ->运动总的时间 c-> 运动的距离 目标-当前位置
+		var b = ele_length;
+		var d = total_t;
+		var c = end_n-b;
+		timer = requestAnimationFrame(function func(){
+			// t 运动花费的时间
+			var t = d - Math.max(0,startTime - (+new Date()) + d);					
+			// 运动进度条
+			svg_img.style.strokeDashoffset=n=t * c / d + b;		
+			// 百分比文字
+			if(text)text.textContent=Math.ceil((ele_length-n)/ele_length*100)+'%';		
+			// 执行动画
+			timer = requestAnimationFrame(func);
+			// 动画结束
+			if(t == d){
+			  cancelAnimationFrame(timer);
+			}
+		});
+
+	
+		// 取得css 样式
+		function css(t, n) {
+			return t.currentStyle ? t.currentStyle[n] : getComputedStyle(t, false)[n]
+		}
+
+	}
+    </script>
+</head>
+<body>
+<svg width="300" height="300"  xmlns="http://www.w3.org/2000/svg">
+    <circle id="backdrop" r="149" cy="149" cx="149" stroke-width="2" stroke="#333" fill="none"  />
+	<text x='47%' y='48%' fill='red' id='txt'>0%</text>
+    <circle id="progress" r="149" cy="149" cx="149"  stroke-width="3" stroke="orange" fill="none" />
+</svg>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style>
+body{ background:#f9f9f9;}
+#menu{width:50px;height:50px; position:fixed;right:20px; bottom:20px; }
+#menu_list{height:42px;width:42px; position:relative;margin:4px;}
+#menu_list img{ border-radius:21px; position:absolute;left:0;top:0; -webkit-transition:0.5s all ease;}
+#home{width:50px;height:50px;background:url(../img/home.png) no-repeat; border-radius:25px; position:absolute; left:0;top:0; transition:1s;}
+</style>
+<script>
+window.onload=function(){
+	var oHome=document.getElementById('home');
+	var aImg=document.getElementById('menu_list').getElementsByTagName('img');
+	var off=true;
+	var iR=-150;
+	
+	for(var i=0;i<aImg.length;i++)
+	{
+	  	 aImg[i].onclick=function()
+		 {  this.style.transitionDuration=0.3+'s';
+			this.style.WebkitTransitionDelay=0+'ms';
+			this.style.WebkitTransform='scale(1.5)';
+			this.style.opacity=0.1; 
+			bindEvent(this, 'webkitTransitionEnd', end);
+		 }
+	}
+    function end()
+	{
+		this.style.WebkitTransform='scale(1)';
+		this.style.opacity=1; 
+		this.style.WebkitTransform="rotate(-720deg)";
+		unbindEvent(this, 'webkitTransitionEnd', end);
+	}
+	oHome.onclick=function(ev)
+	{
+		if(off)
+		{
+		  this.style.WebkitTransform="rotate(-360deg)";
+		  for(var i=0;i<aImg.length;i++)
+		  {
+			  var oLT=toLT(iR,90/4*i);
+			  aImg[i].style.transitionDuration=0.5+'s';
+			  aImg[i].style.WebkitTransitionDelay=100*i+'ms';
+			  aImg[i].style.left=oLT.l+'px';
+			  aImg[i].style.top=oLT.t+'px';
+			  aImg[i].style.WebkitTransform="rotate(-720deg)";
+		  }
+		}
+		else
+		{
+			  for(var i=0;i<aImg.length;i++)
+			  {
+				  aImg[i].style.transitionDuration=0.3+'s';
+				  aImg[i].style.WebkitTransitionDelay=0+'ms';
+				  aImg[i].style.WebkitTransform="rotate(360deg)";
+				  aImg[i].index=i;
+				  bindEvent(aImg[i],'webkitTransitionEnd',rotateEnd);  
+			  }
+             this.style.WebkitTransform="rotate(0deg)";
+		}
+		off=!off;
+	}
+
+    var rotateEnd=function()
+	{
+	  this.style.WebkitTransitionDelay=100*(aImg.length-1-this.index)+'ms';
+	  this.style.left=0+'px';
+	  this.style.top=0+'px';
+	  this.style.WebkitTransform="rotate(0deg)";
+	  unbindEvent(this,'webkitTransitionEnd',rotateEnd); //transitionend ---标准下
+	}
+	
+}
+
+function toLT(iR,iDeg)
+{
+	var iLeft=Math.round(Math.sin(iDeg/180*Math.PI)*iR);	 
+	//对边的长度
+	var iTop=Math.round(Math.cos(iDeg/180*Math.PI)*iR);	
+	return {l:iLeft,t:iTop};
+}
+function bindEvent(obj, ev, fn)
+{
+	obj.addEventListener?obj.addEventListener(ev, fn, false):obj.attachEvent('on'+ev, fn);
+}
+function unbindEvent(obj, ev, fn)
+{
+	obj.removeEventListener?obj.removeEventListener(ev, fn, false):obj.detachEvent('on'+ev, fn);
+}
+
+</script>
+
+</head>
+
+<body>
+<div id="menu">
+	<div id="menu_list">
+    	<img src="../img/prev.png" alt=""/>
+        <img src="../img/open.png" alt="" />
+        <img src="../img/clos.png" alt="" />
+        <img src="../img/full.png" alt="" />
+        <img src="../img/refresh.png" alt="" />
+    </div>
+	<div id="home"></div>
+</div>
+
+</body>
+</html>

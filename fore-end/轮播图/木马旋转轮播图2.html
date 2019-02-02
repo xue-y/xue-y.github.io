@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <style>
+        #slide *{margin:0;padding:0;}
+        #slide img{vertical-align:middle;}
+        #slide ul,#slide ol{list-style:none;}
+        #slide{width:600px; height: 260px;margin:100px auto 0;user-select:none; position: relative; overflow: hidden;}
+        #slide ul{ height: 100%; width:400px;position: relative; }
+        #slide ul li{ position:absolute;width:100%; height: 100%; text-align: center; font-size: 30px; color:#fff;}
+        #slide ul li a{ width: 100%;height: 100%; display: block}
+        #slide ul li img{width:100%;}
+        #slide .list_btn{height:30px;position:absolute;bottom:10px;right:20px; z-index: 20;}
+        #slide .list_btn li{width:20px;height:20px;margin-left:10px;float:left;background:#999;border-radius:50%;cursor:pointer;}
+        #slide .list_btn .active{background:#f60;cursor:default;}
+        #slide .prev,#slide .next{z-index: 20;width:40px;height:80px;background:rgba(0,0,0,0.5);position:absolute;top:50%;margin-top:-40px;text-align:center;line-height:80px;font:30px/80px "宋体";color:#fff;cursor:pointer;}
+        #slide .prev{left:0px;border-radius:0px 10px 10px 0px;}
+        #slide .next{right:0px;border-radius:10px 0px 0px 10px;}
+    </style>
+    <script>
+    $(function () {
+        var opt={
+            now:0,// 默认选中
+            btn:{
+                prev:'.prev',
+                next:'.next',
+                list:'.list_btn'
+            },
+            t:300,// 一次运动的时间
+            delay:3000,// 间隔时间
+            easing:'swing',// 运动形式
+        };
+
+        round($('#slide'),400,opt);
+
+        /* 封装函数
+        wrap 最外层容器 元素集合为 ul>li
+        img_ong_w 展示的一张图片的宽度
+        opt 可选参数选项
+        * */
+        function round(wrap,img_ong_w,opt)
+        {
+            if (arguments.length < 2) {
+                console.log('wrap , img_ong_w 参数不得为空');
+                return;
+            }
+            var defaults={
+              //  now:0,// 默认选中
+                btn:{
+                    prev:'.prev',
+                    next:'.next',
+                    list:'.list_btn'
+                },
+                t:300,// 一次运动的时间
+                delay:5000,// 间隔时间
+                easing:'swing',// 运动形式
+                autoPlay:true, //自动播放
+            };
+            var img_list=wrap.find('ul>li');
+            var img_len=img_list.length;
+            var median=Math.floor(img_len/2);    // 图片个数中间数
+            var wrap_w=wrap.innerWidth(); // 容器的宽度
+            var img_w=img_ong_w; // 一张展现图片的宽度
+            var zd_w=Math.round((wrap_w-img_w)/(img_len-1));
+            var off=true;// 运动开关
+            //一次运动的元素个数，运动的属性数组,定时器
+            var n=0,new_attr,timer;
+            var attr=[];
+
+            // 判断参数----------------点击按钮
+            var list_btn,prev,next;
+            if(opt.btn)
+            {
+                if(opt.btn.list)
+                    list_btn=wrap.find(opt.btn.list).children();
+                if(opt.btn.prev)
+                    prev=wrap.find(opt.btn.prev);
+                if(opt.btn.next)
+                    next=wrap.find(opt.btn.next);
+            }
+
+            var now;//当前选中
+            if(typeof opt.now=="undefined")
+            {
+                now=median;
+
+            }else{
+                now=parseInt(opt.now)
+                if(now<0 || now>img_len-1)
+                    now=median;
+            }
+
+            var t=opt.t || defaults.t;  // 一张运动时间
+            var easing=opt.easing || defaults.easing; // 运动形式
+            var delay=opt.delay || defaults.delay; // 一次运动间隔时间 s*/
+            var autoPlay=opt.autoPlay===false?false:true;
+
+            // 定义属性值
+            for(var i=0;i<img_len;i++)
+            {
+                attr[i]={};
+                attr[i].width=(1-Math.abs(median-i)/10)*100+'%';
+                attr[i].top=Math.abs(median-i)*5+'%';
+                attr[i].opacity=1-Math.abs(median-i)/10;
+
+                if(i>median)
+                {
+                    //  折叠宽度* 折叠个数（包括当前的） + 展现图片宽度 - 当前图片宽度
+                    attr[i].left=(zd_w*i+img_w)-(1-Math.abs(median-i)/10)*img_w;
+                }else
+                {
+                    attr[i].left=zd_w*i;
+                }
+                attr[i].zIndex=median-Math.abs(i-median)+1;
+            }
+
+              // 如果选中的不是 中间值
+            if(now!=median)
+            {
+                if(now>median)
+                {
+                    n=now-median;
+                    new_attr=attr.splice(img_len-n,n);
+                    for(k=0;k<new_attr.length;k++)
+                    {
+                        attr.unshift(new_attr[k]);
+                    }
+                }else
+                {
+                    n=median-now;
+                    new_attr=attr.splice(0,n);
+                    for(var k=0;k<n;k++)
+                    {
+                        attr.push(new_attr[k]);
+                    }
+                }
+            }
+
+            // 初始化位置
+            for(var i=0;i<img_len;i++)
+            {
+                img_list.eq(i).css({'width':attr[i].width,'top':attr[i].top,'opacity':attr[i].opacity,'zIndex':attr[i].zIndex,'left':attr[i].left});
+            }
+            //当前选中
+            if(list_btn)
+                list_btn.eq(now).addClass('active');
+
+            // 轮播运动
+            // 上一张
+            if(prev)
+            {
+                prev.click(function () {
+                    if(!off)return;
+                    off=false;
+                    if(list_btn)list_btn.eq(now).removeClass('active');
+                    now--;
+                    if(now<0)
+                        now=img_len-1;
+                    attr.push(attr.shift());
+                    yun(attr);
+                    if(list_btn)list_btn.eq(now).addClass('active');
+                });
+            }
+
+
+            //下一张
+            if(next)
+            {
+                next.click(function () {
+                    if(!off)return;
+                    off=false;
+                    nextFn();
+                });
+            }
+
+            function nextFn()
+            {
+                if(list_btn)list_btn.eq(now).removeClass('active');
+                now++;
+                if(now==img_len)
+                    now=0;
+                attr.unshift(attr.pop());
+                yun(attr);
+                if(list_btn)list_btn.eq(now).addClass('active');
+            }
+
+            // 点击切换---- 切换的属性数组，不是图片
+            if(list_btn)
+            {
+                list_btn.each(function(i,e){
+                    $(this).click(function(){
+                        if(i==now)return;
+
+                        if(!off)return;
+                        off=false;
+                        // i 点击的当前元素，now 上一个显示的元素
+                        if(list_btn)list_btn.eq(now).removeClass('active');
+                        if(i>now)
+                        {
+                            n=i-now;
+                            new_attr=attr.splice(img_len-n,n);
+                            for(k=0;k<new_attr.length;k++)
+                            {
+                                attr.unshift(new_attr[k]);
+                            }
+                            yun(attr);
+                        }else
+                        {
+                            n=now-i;
+                            new_attr=attr.splice(0,n);
+                            for(var k=0;k<n;k++)
+                            {
+                                attr.push(new_attr[k]);
+                            }
+                            yun(attr);
+                        }
+                        if(list_btn)list_btn.eq(i).addClass('active');
+                        now=i;
+                    });
+                });
+            }
+
+
+            // 运动主函数--- 重新给元素添加属性
+            function yun(attr) {
+                for (var i=0;i<img_len;i++)
+                {
+                    img_list.eq(i).css('z-index',attr[i].zIndex);
+                    img_list.eq(i).stop().animate({'width':attr[i].width,'top':attr[i].top,'opacity':attr[i].opacity,'left':attr[i].left},t,easing,function () {
+                        off=true;
+                    });
+                }
+            }
+
+            // 自动播放
+            if(autoPlay)
+            {
+                timer=setInterval(nextFn,delay);
+
+                // 鼠标滑过事件
+                $('#slide').hover(function () {
+                    if(timer)clearInterval(timer);
+                },function(){
+                    timer=setInterval(nextFn,delay);
+                });
+            }
+    }
+
+    });
+    </script>
+</head>
+<body>
+    <div id="slide">
+        <ul>
+            <li><a><img src="../img/1.jpg"> </a></li>
+            <li><a><img src="../img/2.jpg"> </a></li>
+            <li><a><img src="../img/3.jpg"> </a></li>
+            <li><a><img src="../img/4.jpg"> </a></li>
+            <li><a><img src="../img/5.jpg"> </a></li>
+        </ul>
+        <ol class="list_btn">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ol>
+        <div class="lr_btn">
+            <span class="prev">&lt;</span>
+            <span class="next">&gt;</span>
+        </div>
+    </div>
+</body>
+</html>

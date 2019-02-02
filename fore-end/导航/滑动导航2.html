@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>jQuery滑动导航菜单</title>
+<style type="text/css">
+body{ font-size:100%; font-family:"Microsoft YaHei","Arial"; background:#fff;}
+#nav{ position:relative; width:832px; _width:835px; margin:100px auto 0 auto; border-bottom:2px #ddd solid;}
+#nav .nav-menu{ height:50px;}
+#nav .nav-menu a{ display:block; float:left; height:50px; padding:0 40px; line-height:50px; color:#666; font-size:16px; text-decoration:none;}
+#nav .nav-current{ position:absolute; bottom:-2px; height:2px; overflow:hidden; background:#80b600;}
+</style>
+<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	var navcur = $(".nav-current");
+	var nav = $("#nav").find('a');
+	nav_slide(nav,navcur,50,null,true);
+
+	/*封装函数
+	nav_ele 导航元素集合
+	nav_bg  导航滑动背景元素
+	t 		单个元素运动的时间 默认 100
+	s_type  运动类型    默认 linear
+	now_pos 鼠标离开回到选中位置 默认FALSE
+	now 	选中导航    默认 0
+	*/
+	function nav_slide(nav_ele,nav_bg,t,s_type,now_pos,now)
+	{
+		// 判断值
+		if(arguments.length<2)
+		{
+			console.log('导航元素，滑动元素不得为空');
+			return;
+		}
+		if(!t)
+			t=100;
+		else
+			t=Math.max(10,parseInt(t));
+		
+		if(!s_type)
+			s_type='linear';
+			
+		if(!now)
+			now=0;
+		else
+		{
+			now=Math.max(0,parseInt(now));
+			now=Math.min(nav_ele.length-1,now);
+		}			
+			
+		// 设置初始属性
+		var itemW = nav_ele.eq(now).innerWidth();    //默认当前位置宽度
+		var defLeftW = nav_ele.eq(now).position().left;    //默认当前位置Left值
+
+		//设置下划线 属性值
+		nav_bg.css({width:itemW,left:defLeftW});
+		
+		// 鼠标滑过的当前值, 运动的元素个数
+		var cur_now,num; 		
+		
+		if(now_pos==true)
+		{
+			// 鼠标滑过滑离事件,回到选中的原始位置
+			nav_ele.each(function(i,ele)
+			{	
+				var _index = i;    //获取滑过元素索引值
+				var num=Math.abs(now-_index);
+				
+				$(this).mouseover(function()
+				{	
+					var leftW = $(this).position().left;    //获取滑过元素Left值
+					var currentW = $(this).innerWidth();    //获取滑过元素Width值
+					nav_bg.stop().animate({left: leftW,width: currentW},num*t,s_type); 
+					cur_now=_index;
+				});	 
+			});	
+			nav_bg.parent().mouseout(function()
+			{
+				var num=Math.abs(now-cur_now);
+				nav_bg.stop().animate({left: defLeftW,width: itemW},num*t,s_type)	
+			});
+				
+		}else
+		{
+			// 鼠标滑过事件
+			nav_ele.each(function(i,ele)
+			{	
+				var _index = i;    //获取滑过元素索引值				
+				$(this).mouseover(function()
+				{	
+					if(now == _index)return;			     
+					var num=Math.abs(now-_index);
+					var leftW = $(this).position().left;    //获取滑过元素Left值
+					var currentW = $(this).innerWidth();    //获取滑过元素Width值
+					nav_bg.stop().animate({left: leftW,width: currentW},num*t,s_type); 
+					now=_index;
+				});
+			});	
+		}
+	}
+
+});
+</script>
+</head>
+<body>
+<div id="nav">
+    <div class="nav-menu">
+        <a href="#">首页</a>
+        <a href="#">了解我们</a>
+        <a href="#">产品展示</a>
+        <a href="#">服务报价</a>
+        <a href="#">最新消息</a>
+        <a href="#">联系方式</a>
+    </div>
+    <div class="nav-current"></div>
+</div>
+</body>
+</html>

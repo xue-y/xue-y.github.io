@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>琴弦文字--translateY</title>
+	<style type="text/css">
+		#qin_wire *{ padding: 0px; margin: 0px; }
+		#qin_wire{width:500px; list-style: none; margin:100px auto;  border:1px solid #ddd;  padding-left: 5px;font-size:14px;line-height: 50px;}	
+		#qin_wire li{ height: 50px; border-bottom:1px solid #ddd; position: relative; }
+		#qin_wire li span{width:14px; height: 14px;transition:all 0.01s cubic-bezier(0.06, 1.51, 0.74, 1.32);; display:inline-block;}
+	</style>
+	<script type="text/javascript">
+		window.onload=function(){
+
+			var oul=document.getElementsByTagName('ul')[0];
+			var oli=oul.getElementsByTagName("li");
+			var li_h=oli[0].offsetHeight;
+			var li_len=oli.length;
+			for (var i = 0; i < li_len; i++) 
+			{
+				var txt=oli[i].innerHTML;
+				oli[i].innerHTML="";
+				var txt_len=txt.length
+				for (var j = 0; j <txt_len ; j++)
+				{
+					oli[i].innerHTML+="<span>"+txt[j]+"</span>"
+				}
+				var span=oli[i].children;
+				var span_h=span[0].offsetHeight;
+				
+				// 挂载当前每个li 下的span 长度
+				span.len=txt_len;
+				
+				for(var j=0;j<txt_len;j++)
+				{
+					// 定义初始位置		
+					span[j].style.transform='translateY(0px)';  
+					span[j].startY=0;
+					
+					(function(span,n2){
+						var istrat=0;
+						span[n2].onmouseover=function(ev)
+						{
+							istrat=ev.clientY;
+						};
+						span[n2].onmousemove=function(ev)
+						{
+								// 移动距离
+							var iy=	ev.clientY-istrat;
+							
+							// 往下移动大于0  往上移动小于0
+						    var iNum=iy>0?1:-1;
+							
+						    // 原始距离+ 移动的数据向下走 < li 高度- span 高度
+							if(Math.abs(this.startY+iy)<(li_h-span_h)/2)
+							{
+							
+								for(var k=0;k<span.len;k++)
+								{
+								    //  当前元素移动的距离  > 当前元素所在位置 - 元素邻边所在位置
+									if(Math.abs(iy)>Math.abs(n2-k))
+									{
+										// 当前元素第几个 减去差值 【差几个元素减去几个像素值】
+										var val=parseInt(span[k].startY)+(Math.abs(iy)-Math.abs(n2-k))*iNum;
+										
+									}else
+									{
+										 var val=parseInt(span[k].startY);
+									}
+									span[k].style.transform="translateY("+val+"px)";
+								}
+							}						
+						};
+						span[n2].onmouseout=function(ev)
+						{
+
+							for(var k=0;k<span.len;k++)
+							{ 
+								span[k].style.transform="translateY("+span[k].startY+"px)";;
+							}
+
+						};
+					})(span,j);
+				}
+			}
+		}
+	</script>
+</head>
+<body>
+	
+</body>
+	<ul id="qin_wire">
+		<li>琴弦文字琴弦文字琴弦文字11</li>
+		<li>琴弦文字琴弦文字琴弦文字222</li>
+		<li>琴弦文字琴弦文字琴弦文字333</li>
+		<li>琴弦文字琴弦文字琴弦文字4444</li>
+		<li>琴弦文字琴弦文字琴弦文字5555555555555</li>
+	</ul>
+</html>

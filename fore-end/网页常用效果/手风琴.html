@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Animate_Left------手风琴效果</title>
+    <style>
+        #accordion{ width:600px;height: 260px; overflow: hidden; margin: 50px auto;border:1px solid #dcdcdc;
+        box-shadow: 0px 0px 3px 1px #dcdcdc;}
+        #accordion *{ padding: 0px; margin: 0px;}
+        #accordion ul{ list-style: none; height: 100%; position: relative;}
+        #accordion li{ float: left; overflow: hidden; height: 100%; position: absolute;user-select:none;}
+        #accordion li a{width:100%; height: 100%; display:block;background: rgba(0,0,0,0.2);
+        position: absolute;top:0px; z-index: 2; cursor: pointer; transition: background-color 0.2s ease-in;}
+        #accordion li a.bg{ background:  rgba(0,0,0,0);}
+    </style>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <script>
+        $(function () {
+
+        // 调用示例
+        accor($('#accordion li'),400,400,null);
+        /*
+        ele 元素集合
+        one_w  单张图片展示宽度
+        t   运动时间，默认为单张图片宽度 s
+        easing 运动形式， 默认linear
+        now     当前选中，不传参默认平均分配
+        * */
+        function accor(ele,one_w,t,easing,now)
+        {
+            // 判断值
+            if(arguments.length<2)
+            {
+                console.log('元素集合，单张图片宽度参数必传');
+                return
+            }
+            var min_w=100; // 定义展示图片最小宽度
+            var zhedie_min_w=30;// 折叠起来最小显示宽度
+
+            if(parseInt(one_w)<min_w)
+            {
+                console.log('单张图片宽度太小');
+                return;
+            }
+            one_w=parseInt(one_w);
+
+            // 运动时间
+            t=!t?one_w:Math.max(min_w,parseInt(t));
+
+            if(!easing)easing='linear';
+
+            // 定义基本变量
+            var len=ele.length;
+            var warp_w=ele.parent().innerWidth();
+            var zhedie_w=Math.round((warp_w-one_w)/(len-1));
+
+            if(zhedie_w<zhedie_min_w)
+            {
+                console.log('折叠时展示的图片过小，请更容器宽度或减小单张展示图片宽度');
+                return;
+            }
+			
+			
+			var zd_w=Math.ceil((warp_w-one_w)/(len-1));
+	   
+            // 选中某个还是平均分配
+            if(typeof now =='undefined')
+            {
+                now=-1;
+				// 定义元素初始 位置
+                var zhedie_w=Math.ceil(warp_w/len);
+                for(i=0;i<len;i++)
+                {
+                    ele.eq(i).css({'left':zhedie_w*i,'z-index':i+1});
+                }
+            }else
+            {
+                now=parseInt(now);
+                if(now<0 || now>(len-1))
+                   now=0;
+
+                // 当前选中样式定义
+                if(!ele.eq(now).find('a').hasClass('bg'))
+                {
+                    ele.eq(now).find('a').addClass('bg');
+                }
+				
+				// 定义元素初始 位置
+                for(i=0;i<len;i++)
+                {
+                   if(i>now)
+                   {
+                       ele.eq(i).css({'left':zd_w*(i-1)+one_w});
+                   }else
+                   {
+                       ele.eq(i).css({'left':zd_w*i});
+                   }
+                   ele.eq(i).css({'z-index':i+1});
+                }
+            }
+
+            // 鼠标事件
+            ele.each(function(index,e){
+                $(this).mouseenter(function(){
+                    if(index==now)return;
+
+                    // 如果是平均分配的
+                    if((now==-1))
+                    {
+                        // 当前移入元素 右边的元素运动
+                        for(var i=0;i<len;i++)
+                        {
+                            ele.eq(i).stop().animate({'left':zd_w*(i-1)+one_w},t,easing);
+                        }
+                    }
+                    // 当前移入元素 左边的运动
+                    if(index>now)
+                    {
+                        for(var i=now+1;i<=index;i++)
+                        {
+                            ele.eq(i).stop().animate({'left':zd_w*i},t,easing);
+                        }
+                    }else
+                    {   // 当前移入元素 右边的元素运动
+                        for(var i=index+1;i<len;i++)
+                        {
+                            ele.eq(i).stop().animate({'left':zd_w*(i-1)+one_w},t,easing);
+                        }
+                    }
+
+                    // 当前选中样式定义
+                    if(!ele.eq(index).find('a').hasClass('bg'))
+                    {
+                        ele.eq(index).find('a').addClass('bg');
+                    }
+                    ele.eq(now).find('a').removeClass('bg');
+                    now=index;
+                }); // 鼠标滑入事件
+            }); // 元素循环
+        }
+
+    });
+    </script>
+</head>
+<body>
+    <div id="accordion">
+        <ul>
+            <li><a></a><img src="../img/1.jpg"></li>
+            <li><a></a><img src="../img/2.jpg"></li>
+            <li><a></a><img src="../img/3.jpg"></li>
+            <li><a></a><img src="../img/4.jpg"></li>
+        </ul>
+    </div>
+</body>
+</html>

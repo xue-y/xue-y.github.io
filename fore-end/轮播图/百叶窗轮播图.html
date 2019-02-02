@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <style>
+        #slide *{margin:0;padding:0;}
+        #slide img{vertical-align:middle;}
+        #slide ul,#slide ol{list-style:none;}
+        #slide{width:400px; height: 260px;margin:100px auto 0;user-select:none; position: relative; overflow: hidden;}
+        /* img_wrap 层级必须高于 img_list */
+        #slide .img_wrap{width:100%; height: 100%;position: absolute; left: 0px;top:0px;z-index: 20;}
+        #slide .img_wrap>div{ float: left; visibility: hidden; height: 100%;}
+        #slide .img_list{ width:100%; height: 100%;margin: 0px auto; position: relative; }
+        #slide .img_list li{ width:100%; height: 100%; position: absolute;left:0px;top:0px; display: none;z-index: 1;}
+        #slide .img_list .active{ display: block;}
+        #slide .img_list li a{ width: 100%;height: 100%; display: block}
+        #slide .img_list li img{width:100%;}
+        #slide .list_btn{height:30px;position:absolute;bottom:10px;right:20px; z-index: 20;}
+        #slide .list_btn li{width:20px;height:20px;margin-left:10px;float:left;background:#999;border-radius:50%;cursor:pointer;
+            transition-property: background-color;transition-timing-function:linear;}
+        #slide .list_btn .active{background:#f60;cursor:default; }
+        #slide .prev,#slide .next{z-index: 20;width:40px;height:80px;background:rgba(0,0,0,0.5);position:absolute;top:50%;margin-top:-40px;text-align:center;line-height:80px;font:30px/80px "宋体";color:#fff;cursor:pointer;}
+        #slide .prev{left:0px;border-radius:0px 10px 10px 0px;}
+        #slide .next{right:0px;border-radius:10px 0px 0px 10px;}
+    </style>
+    <script>
+        $(function () {
+            // 选取元素        定义变量
+            var warp=$("#slide"),
+                img_warp=warp.find(".img_wrap"), // 图片分割容器
+                img_list=warp.find(".img_list>li"), // 图片列表
+                img_src=[],
+                img_len=img_list.length;
+
+            var prev=$("#slide").find(".prev"),
+                next=$("#slide").find(".next"),
+                list_btn=$("#slide").find(".list_btn>li");
+            var now=0,timer,t=200,easing="linear",now_class='active',off=true,delay=4000;  // 运动时变量
+            var warp_w=img_warp.innerWidth(),
+                col=6, // 分割多少列
+                col_w=Math.ceil(warp_w/col), 
+                col_last_w=warp_w-col_w*(col-1),
+                bg_pos=col_w;
+            var btn_t=col*t; // 按钮样式 切换时间
+
+            // 初始化
+            img_list.eq(now).addClass(now_class);
+            list_btn.eq(now).addClass(now_class);
+            for(var i=0;i<col;i++)
+            {
+                if(i==col-1)
+                {
+                    col_w=col_last_w;
+                }
+				console.log(i*col_w);
+                img_warp.append("<div style='width:"+col_w +"px;background-position:-"+ (i*bg_pos)+"px 0px'></div>");
+            }
+            var img_warp_div=img_warp.children();
+            // 点击按钮 动画时间
+            img_list.each(function(i){
+                list_btn.eq(i).css('transition-duration',btn_t+'ms');
+                // 图片路径
+                img_src.push(img_list.find('img').eq(i).attr('src'));
+            });
+
+
+            // 按钮点击
+            list_btn.each(function (i) {
+                $(this).click(function(){
+                    if(i == now)return;
+                    if(!off)return;
+                    off=false;
+                    now_img(now);
+                    next_img(i);
+                    now=i;
+                });
+            });
+
+            prev.click(function () {
+                if(!off)return;
+                off=false;
+                prevFn();
+            });
+
+            next.click(function () {
+                if(!off)return;
+                off=false;
+                nextFn();
+            });
+
+            // 当前元素 状态样式
+            function now_img(now) {
+                img_warp_div.each(function (i) {
+                    $(this).css({'background-image':'url('+img_src[now]+')','opacity':1,'visibility':'visible'});
+                });
+                img_list.eq(now).removeClass(now_class);
+                list_btn.eq(now).removeClass(now_class);
+            }
+
+            // 要运动到的下一个元素状态样式
+            function next_img(now)
+            {
+               img_warp_div.each(function(i){
+                    img_warp_div.eq(i).stop().delay(i*(t/2)).animate({'opacity':0},t,easing,function(){
+                        $(this).css('visibility','hidden');
+                        if(i==col-1)
+                            off=true;
+                    });
+                });
+                img_list.eq(now).addClass(now_class);
+                list_btn.eq(now).addClass(now_class);
+            }
+            // 上一张
+            function prevFn() {
+                now_img(now);
+                now--;
+                if(now<0)
+                    now=img_len-1;
+                next_img(now);
+            }
+            // 下一张
+            function nextFn()
+            {
+                now_img(now);
+                now++;
+                if(now==img_len)
+                    now=0;
+                next_img(now);
+            }
+
+            // 自动播放
+            timer=setInterval(nextFn,delay);
+            // 鼠标滑入滑出事件
+            warp.hover(function () {
+                clearInterval(timer);
+            },function () {
+                timer=setInterval(nextFn,delay);
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="slide">
+         <div class="img_wrap"></div>
+         <ul class="img_list">
+             <li><a><img src="../img/1.jpg"> </a></li>
+             <li><a><img src="../img/2.jpg"> </a></li>
+             <li><a><img src="../img/3.jpg"> </a></li>
+             <li><a><img src="../img/4.jpg"> </a></li>
+             <li><a><img src="../img/5.jpg"> </a></li>
+         </ul>
+        <ol class="list_btn">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ol>
+        <div class="lr_btn">
+            <span class="prev">&lt;</span>
+            <span class="next">&gt;</span>
+        </div>
+    </div>
+</body>
+</html>

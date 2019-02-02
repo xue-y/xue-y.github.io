@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+<style>
+body{ background:#f9f9f9;}
+#menu{width:500px;height:500px;  margin:0px auto; position:relative;}
+#menu *{ padding:0px; margin:0px;list-style:none;}
+#menu ul,#menu #btn{ position: absolute;left:50%; top:50%;width:60px; height: 60px;margin-left:-30px;margin-top:-30px;}
+#menu #btn{border:1px solid #1db0ea; border-radius: 50%;box-sizing: border-box; cursor: pointer}
+#menu ul>li {
+    position: absolute;
+    width: 30px;
+    border-bottom: 30px solid yellowgreen;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent
+}
+#menu ul>li::before {
+    content: "";
+    position: absolute;
+    width: 30px;
+    height: 0px;
+    top: 30px;
+    left: -15px;
+    border-top: 30px solid yellowgreen;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+}
+</style>
+<script>
+$(function () {
+    // 选取元素
+    var nav_ele=$("#menu li");
+    var nav_btn=$("#menu #btn");
+    var len=nav_ele.length-1;
+    var r=150;
+    var deg=90;
+    var off=true;
+
+    // 添加点击事件
+    nav_btn.click(function(){
+        if(off)
+        {
+            nav_ele.each(function(i,ele){
+                // 元素赋值
+                var line=line_len(deg/len*i,r);
+                $(this).stop().delay(i*100).animate({left:line.l,top:line.t},'swing',function(){
+                    off=false;
+                });
+            });
+        }else
+        {
+            nav_ele.each(function(i,ele){
+                // 元素回到初始位置
+                $(this).stop().delay(i*100).animate({left:0,top:0},'swing',function(){
+                    off=true;
+                });
+            });
+        }
+    });// -----------------------点击事件结束
+
+});
+
+// 对边 临边
+function line_len(deg,r)
+{
+    var a=Math.round(Math.sin(deg/180*Math.PI)*r);
+    var b=Math.round(Math.cos(deg/180*Math.PI)*r);
+    return {l:a,t:b}
+}
+</script>
+</head>
+<body>
+<div id="menu">
+    <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <div id="btn"></div>
+</div>
+</body>
+</html>

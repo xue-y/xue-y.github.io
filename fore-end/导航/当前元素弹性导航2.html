@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+<meta name="description" content="描述">
+<meta name="keywords" content="关键词1,关键词2">
+<script src="../js/js_tween.js"></script>
+<title>导航栏</title>
+<style>
+#box{height:50px;float:left;position:relative;background:#f90;overflow: hidden;margin:50px auto;}
+#box ul,#box li{margin:0px; padding:0px;}
+#box #bar{width:64px;height:100%;position:absolute;left:0;top:0;background:#333;}
+#box #bar .l{width:0;height:100%;background:#333;border-radius:50%;position:absolute;top:0;left:0;}
+#box #bar .r{width:0;height:100%;background:#333;border-radius:50%;position:absolute;top:0;right:0;}
+#box ul{height:100%;font-size:14px;letter-spacing:1px;font-family:"微软雅黑";list-style:none;position:relative;}
+#box ul li{height:100%;line-height:50px;float:left;}
+#box ul a{height:100%;text-decoration:none;color:#fff;padding:0 20px;display:block;}
+</style>
+</head>
+<body>
+<div id="box">
+	<div id="bar">
+		<div class="l"></div>
+		<div class="r"></div>
+	</div>
+	<ul id="ul">
+		<li><a href="#1">祝</a></li>
+		<li><a href="#2">大家</a></li>
+		<li><a href="#3">在2018</a></li>
+		<li><a href="#4">能顺利</a></li>
+		<li><a href="#5">掌握</a></li>
+		<li><a href="#6">javaScript</a></li>
+	</ul>
+</div>
+
+<script>
+var oBar=document.getElementById("bar"),
+	oRight=oBar.getElementsByClassName("r")[0],
+	oLeft=oBar.getElementsByClassName("l")[0],
+	oUl=document.getElementById("ul"),
+	aLi=oUl.getElementsByTagName("li"),
+	iNow=1;//表示当前哪项高亮
+    oBar.style.left=aLi[iNow].offsetLeft+"px";
+    oBar.style.width=aLi[iNow].offsetWidth+"px";
+    for(var i=0;i<aLi.length;++i){
+    	aLi[i].index=i;
+    	aLi[i].onmouseover=function(){
+			//iNow=this.index;
+    		lesgo(this);
+    	};
+    }
+    oUl.onmouseout=function(){
+    	lesgo(aLi[iNow]);
+	};
+	
+	function lesgo(oLi){//效果主要函数
+		var t=Math.abs(oLi.offsetLeft-oBar.offsetLeft)*0.7;
+
+		move(oBar,{left:oLi.offsetLeft,width:oLi.offsetWidth},t,"easeOut",function(){
+
+			move(oRight,{width:0,right:0},80,"linear",function(){
+				oRight.style.background="#f90";
+				move(oRight,{width:20,right:-10},80,"linear",function(){
+					move(oRight,{width:0,right:0},50,"linear");
+				});
+			});
+			move(oLeft,{width:0,left:0},80,"linear",function(){
+				oLeft.style.background="#f90";
+				move(oLeft,{width:20,left:-10},80,"linear",function(){
+					move(oLeft,{width:0,left:0},50,"linear");
+				});
+			});
+		});
+		// iNow++
+		if(oLi.offsetLeft > oBar.offsetLeft){
+			setColor('#333','#f90');
+		// iNow--
+		}else if(oLi.offsetLeft < oBar.offsetLeft){
+			setColor('#f90','#333');
+		}
+		function setColor(color1,color2){
+			oRight.style.background = color1;
+			oLeft.style.background = color2;
+			move(oRight,{width:40,right:-20},t);
+			move(oLeft,{width:40,left:-20},t);
+		}
+	}
+
+</script>
+</body>
+</html>

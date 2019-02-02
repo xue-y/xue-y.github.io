@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>弹性运动---弹性菜单</title>
+    <style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+    li {
+        list-style: none;
+    }
+    ul {
+        width: 400px;
+        height: 30px;
+        position: relative;
+        margin: 100px auto 0;
+    }
+    li {
+        float: left;
+        width: 98px;
+        height: 28px;
+        line-height: 28px;
+        border: 1px solid #ccc;
+        text-align: center;
+        z-index: 2;
+        position: relative;
+        cursor: pointer;
+    }
+    .bg {
+        width: 100px;
+        height: 5px;
+        overflow: hidden;
+        background: red;
+        border: none;
+        position: absolute;
+        top: 24px;
+        left: 0;
+        z-index: 1;
+    }
+</style>
+<script type="text/javascript">
+    window.onload=function ()
+    {
+        var oUl=document.getElementById('ul1');
+        var aLi=oUl.getElementsByTagName('li');
+        var oBg=aLi[aLi.length-1];
+        var i=0;   
+        for(i=0;i<aLi.length-1;i++)
+        {
+            aLi[i].index=i;
+            aLi[i].onmouseover=function ()
+            { // 移动的元素 当前对象  移动的属性
+                startMove(oBg,this,'left');
+            };
+        }
+    };
+    
+    // 移动的元素 当前对象  移动的属性
+    function startMove(obj, index, attr)
+    {
+        iTarget=get_offset_val(index, attr);
+        obj.attr_name=get_offset_val(obj, attr);
+        if(iTarget==obj.attr_name)
+            return;  // 如果选择的是当前的选中的元素
+        obj.iSpeed=0;
+        var iSpeed_dis=5;// 速度比值
+        var mc =0.7 ; // 摩擦大小 值越大元素停止运动时间越长 值越小元素停止运动的时间越快
+        // 防止开启多次定时器 
+         clearInterval(obj.timer);
+         obj.timer=setInterval(backOut, 30);
+         
+        // 弹性运动
+        function backOut()
+        {
+            // 加、减速运动 iTarget>obj.offsetLeft加速运动  iTarget<obj.offsetLeft减速运动
+            obj.iSpeed+=(iTarget-obj.attr_name)/iSpeed_dis; 
+            // 摩擦运动 让元素停止运动
+            obj.iSpeed*=mc; 
+            obj.attr_name+=obj.iSpeed; // 防止小数误差 ispeed 不是整数 ，把小数保留下来
+            //运动速度小1 并且目标点与元素距离小于1 停止运动
+            if(Math.abs(obj.iSpeed)<=1 && Math.abs(obj.attr_name-iTarget)<=1)
+            {
+                obj.style[attr]=iTarget+'px';
+                clearInterval(obj.timer);  
+            }
+            else
+            {
+                obj.style[attr]= obj.attr_name+'px';
+            }
+        } //------------------ backOut() 结束
+    }
+    
+     // 获取 offset　值
+    function get_offset_val(obj,attr)
+    {
+        switch(attr)
+        {
+            case 'left':
+             return obj.offsetLeft;
+             break;
+            case 'top':
+             return obj.offsetTop;
+             break;
+            case 'width':
+             return obj.offsetWidth;
+             break;
+            case 'height':
+             return obj.offsetHeight;
+             break;
+        }
+    }
+</script>
+</head>
+
+<body>
+    <ul id="ul1">
+      <li>首页</li>
+      <li>关于我们</li>
+      <li>产品</li>
+      <li>联系方式</li>
+      <li class="bg"></li>
+    </ul>
+</body>
+</html>

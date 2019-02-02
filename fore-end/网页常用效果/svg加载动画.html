@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>svg </title>
+	<style>
+	circle{ transform:rotate(-90deg);transform-origin:50% 49.7%;}
+	</style>
+    <script>
+    window.onload=function(){
+		var idtxt=document.getElementById('txt');		
+		var progrees=document.getElementById('progress');
+		
+
+		var r=progrees.getAttribute('r');
+	    var arcLength=Math.floor(2*Math.PI*r); // 周长
+		var taget=100;
+		var num=0;	
+		
+		var t=setInterval(function(){
+			num++;
+			if(num>taget)
+			{clearInterval(t);}
+			else
+			{
+				idtxt.textContent=num+'%';
+				progrees.style.strokeDasharray=arcLength*num/100+' '+arcLength;
+				/*第一个为虚线的长度     第二个是虚线之间的间距
+			     让间距永远不小于圆的周长，虚线的长度=百分比* 周长 */
+			}
+			
+		},30);
+		
+		
+		function css(t, n) {
+			return t.currentStyle ? t.currentStyle[n] : getComputedStyle(t, !1)[n]
+		}
+		
+	}
+    </script>
+</head>
+<body>
+<svg width="300" height="300"  xmlns="http://www.w3.org/2000/svg">
+    <circle id="backdrop" r="149" cy="149" cx="149" stroke-width="2" stroke="#333" fill="none"  />
+	<text x='47%' y='48%' fill='red' id='txt'>1%</text>
+    <circle id="progress" r="149" cy="149" cx="149"  stroke-width="3" stroke="orange" fill="none" />
+</svg>
+</body>
+</html>

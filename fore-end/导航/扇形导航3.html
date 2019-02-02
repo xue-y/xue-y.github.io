@@ -1,0 +1,135 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>扇形导航3</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+<style>
+body{ background:#f9f9f9;}
+#menu{width:500px;height:500px;  margin:0px auto; position:relative;}
+#menu *{ padding:0px; margin:0px;list-style:none;}
+#menu ul,#menu #btn{ position: absolute;left:50%; top:50%;width:60px; height: 60px;margin-left:-30px;margin-top:-30px;}
+#menu #btn{border:1px solid #1db0ea; border-radius: 50%;box-sizing: border-box; cursor: pointer}
+#menu ul>li.active{ border-bottom-color: #367dff;}
+#menu ul>li.active::before{border-top-color: #367dff;}
+#menu ul>li {
+    position: absolute;
+    width: 30px;
+    border-bottom: 30px solid #1db0ea;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent
+}
+#menu ul>li::before {
+    content: "";
+    position: absolute;
+    width: 30px;
+    height: 0px;
+    top: 30px;
+    left: -15px;
+    border-top: 30px solid  #1db0ea;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+}
+</style>
+<script>
+$(function () {
+    // 选取元素
+    var nav_ele=$("#menu li");
+    var nav_btn=$("#menu #btn");
+
+    nav(nav_ele,nav_btn,150,0,360);
+    /** 封装函数
+     * nav_ele      元素集合
+     * nav_btn      点击按钮
+     * start_deg    开始角度位置 0-360  旋转方向与时钟一致，正数向右，负数向左
+     * end_deg      结束角度位置 0-360
+     * r            半径长度 正整数
+     * */
+    function  nav(nav_ele,nav_btn,r,start_deg,end_deg)
+    {
+        // 判断值
+        if(arguments.length<3)
+        {
+            console.log('导航元素，点击按钮元素,半径值不得为空');
+            return;
+        }
+
+        // 如果不传角度使用默认角度
+        start_deg=!start_deg?0:parseInt(start_deg);
+        end_deg=!end_deg?360:parseInt(end_deg);
+
+        // 左右 旋转方向与时钟一致,deg 正数向右，负数向左
+        var deg;
+        deg=end_deg-start_deg;
+        deg*=-1;
+
+        // 数值取反   上下 旋转方向与时钟一致,数值限制最小值 -- 导航元素宽度
+        r=parseInt(r)<nav_ele.eq(0).outerWidth(true)?nav_ele.eq(0).outerWidth(true):-parseInt(r);
+
+        var len=nav_ele.length-1;
+        var off=true,btn=false;
+
+        // 添加点击事件
+        nav_btn.click(function()
+        {
+            if(!btn)
+                btn=true;
+            else
+                return;
+
+            if(btn && off)
+            {
+                nav_ele.each(function(i,ele){
+                    // 元素赋值
+                    var line=line_len((deg/len*i)-start_deg,r);
+
+                    console.log(line);
+                    $(this).stop().delay(i*100).animate({left:line.l,top:line.t},'swing',function(){
+                        btn=false;
+                        off=!off;
+                    });
+                });
+            }else
+            {
+                nav_ele.each(function(i,ele){
+                    // 元素回到初始位置
+                    $(this).stop().delay(i*100).animate({left:0,top:0},'swing',function(){
+                        btn=false;
+                        off=!off;
+                    });
+                });
+            }
+        });// -----------------------点击事件结束
+
+        // 对边 邻边
+        function line_len(deg,r)
+        {
+            // 此处的 a b 与数学中是相反的
+            var a=Math.round(Math.sin(deg/180*Math.PI)*r);
+            var b=Math.round(Math.cos(deg/180*Math.PI)*r);
+            console.log(deg);
+            return {l:a,t:b}
+        }
+    }
+
+
+});
+
+
+</script>
+</head>
+<body>
+<div id="menu">
+    <ul>
+        <li class="active"></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <div id="btn"></div>
+</div>
+</body>
+</html>

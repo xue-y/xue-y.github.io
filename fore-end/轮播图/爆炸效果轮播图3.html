@@ -1,0 +1,241 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>轮播图爆炸效果</title>
+<style>
+#box *{margin:0;padding:0;}
+#box img{vertical-align:middle;}
+#box ul,#box ol{list-style:none;}
+#box a{text-align:center;}
+#box{width:400px;height:260px;border:1px solid #333;margin:100px auto 0;position:relative;-moz-user-select:none;-webkit-user-select:none;user-select:none;}
+#box .img-wrap{width:100%;height:100%;}
+#box .img-wrap a{display:block;width:100%;height:100%;perspective:500px;background:url(../img/1.jpg) no-repeat center center;}
+#box .img-wrap a div{float:left;}
+#box .ol{height:30px;position:absolute;right:10px;bottom:10px;}
+#box .ol li{width:20px;height:20px;margin-left:10px;float:left;background:#999;border-radius:50%;cursor:pointer;}
+#box .ol .active{background:#f60;cursor:default;}
+#box .prev,#box .next{width:40px;height:80px;background:rgba(0,0,0,0.7);position:absolute;top:50%;margin-top:-40px;border-radius:10px;text-align:center;line-height:80px;font:30px/80px "宋体";color:#fff;cursor:pointer;}
+#box .prev{left:5px;}
+#box .next{right:5px;}
+</style>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+<script>
+$(function () {
+    var opt = {
+        aHref: ['#1', '#2', '#3', '#4', '#5'], // 轮播图链接
+        imgWrap: '.img-wrap',
+        btn: {
+            prev: '.prev',  // 左右点击按钮 class
+            next: '.next',
+            list: '.ol', // 下方点击按钮 class
+        },
+        delay: 5000, // 运动间隔时间 s
+    };
+    var imgSrc = ['../img/1.jpg', '../img/2.jpg', '../img/3.jpg', '../img/4.jpg', '../img/5.jpg'];// 图片地址不得为空
+    slide($('#box'),imgSrc, opt);
+
+    // 封装函数
+    function slide(wrap, imgSrc, opt)
+    {
+        if (arguments.length < 2) {
+            console.log('wrap , imgSrc 参数不得为空');
+            return;
+        }
+
+        var defaults = {
+            imgWrap: '.img-wrap',
+            aHref: ['#1', '#2', '#3', '#4', '#5'], // 轮播图链接
+            autoPlay: true, // 是否自动播放
+            btn: {
+                /*prev:'.prev',  // 左右点击按钮
+                next:'.next',
+                list:'.list', */// 下方点击按钮
+                active: 'active' // 选中class
+            },
+            col:3,  // 列
+            row:6, // 行
+            delay: 5000, // 运动间隔时间 s
+            now:0 // 默认选中
+        };
+
+        // 判断图片个数
+        if (imgSrc.length < 1) return;
+        var img_len = imgSrc.length;
+        // 当前选中
+        if(typeof opt.now == "undefined")
+        {
+            var now=defaults.now;
+        }else
+        {
+            var now=Math.min(parseInt(opt.now),img_len);
+            now=Math.max(defaults.now,now);
+        }
+
+        var aHref = opt.aHref || defaults.aHref;
+        var delay = opt.delay || defaults.delay;
+        delay = Math.max(1000, parseInt(delay));
+
+        if (typeof opt.autoPlay != "undefined") {
+            var autoPlay = opt.autoPlay;
+        } else {
+            var autoPlay = defaults.autoPlay;
+        }
+
+        // 点击按钮列表
+        var btn_list = false;
+        if ((typeof opt.btn != "undefined") && (typeof opt.btn.list != "undefined")) {
+            btn_list = wrap.find(opt.btn.list).children();
+            opt.btn.active = opt.btn.active || defaults.btn.active;
+        }
+
+        opt.imgWrap = opt.imgWrap || defaults.imgWrap; // 图片容器
+        var aA = wrap.find(opt.imgWrap).children('a');
+        var aAWid = aA.innerWidth();//大图宽
+        var aAHei = aA.innerHeight();//大图高
+        var col= opt.col || defaults.col; //多少列
+        var row= opt.row || defaults.row; //多少行
+        var smallWid = Math.ceil(aAWid / col);//小图宽
+        var smallHei = Math.ceil(aAHei / row);//小图高
+        var surplusWid = aAWid - smallWid * (col - 1);//每一行最后一个的宽
+        var surplusHei = aAHei - smallHei * (row - 1);//每一列最后一个的高
+        var iNow = now;//当前图
+        var iNow2 = now; //点击后出现的图
+        var timer = 0;//延时器
+        var timer2 = 0;//定时器
+
+        // 初始状态
+        // 初始化第一次数据
+        if (iNow !== 0) {
+            aA.href = aHref[iNow];
+            aA.css('background', 'url(' + imgSrc[iNow] + ') no-repeat center center');
+        }
+
+        if (btn_list !== false)
+            btn_list.eq(iNow).addClass(opt.btn.active);
+
+        //将大图分割成若干个小图(创建若干个div)
+        var strDiv = '';
+        for (var i = 0; i < row; i++) {
+            var newWid = smallWid;
+            var newHei = smallHei;
+            if (i == row - 1) newHei = surplusHei;
+            for (var k = 0; k < col; k++) {
+                if (k == col - 1) newWid = surplusWid;
+                strDiv += '<div style="width:' + newWid + 'px;height:' + newHei + 'px;background:url(' + imgSrc[iNow2] + ') -' + k * smallWid + 'px -' + i * smallHei + 'px;"></div>';
+            }
+        }
+        aA.html(strDiv);
+        var aADiv = aA.children('div');
+
+        //转换主要函数
+        function lesgo() {
+
+            // 当前图片属性样式清除 -- 图片为当前的
+            for (var i = 0; i < aADiv.length; i++) {
+                aADiv.eq(i).css({
+                    'backgroundImage': 'url(' + imgSrc[iNow] + ')',
+                    'transition': 'none',
+                    'transform': 'none',
+                    'opacity': 1,
+                    'visibility': 'visible'
+                });
+            }
+            //点击的按钮  高亮
+            if (btn_list !== false) {
+                btn_list.eq(iNow).removeClass(opt.btn.active);
+                btn_list.eq(iNow2).addClass(opt.btn.active);
+            }
+            // 点击对应的图片显示
+            aA.attr('href',aHref[iNow2]);
+            aA.css('backgroundImage', 'url(' + imgSrc[iNow2] + ')');
+
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                //  从新添加样式属性
+                for (var i = 0; i < aADiv.length; i++) {
+                    aADiv.eq(i).css({
+                        'transition': 'transform 500ms,opacity 500ms,visibility 500ms',
+                        'transform': 'translateZ(350px) rotate(' + ((Math.random() * 2 - 1) * 180) + 'deg) rotateX(' + ((Math.random() * 2 - 1) * 180) + 'deg) rotateY(' + ((Math.random() * 2 - 1) * 180) + 'deg)',
+                        'opacity': 0, 'visibility': 'hidden'
+                    });
+                }
+            }, 100);
+            iNow = iNow2;
+        }
+
+        //右下角按钮
+        if (btn_list) {
+            btn_list.each(function (i, e) {
+                $(this).click(function () {
+                    iNow2 = i;
+                    if (iNow == iNow2) return;
+                    lesgo();
+                });
+            });
+        }
+        // 上一张
+        if ((typeof opt.btn != "undefined") && (typeof opt.btn.prev != "undefined")) {
+            wrap.find(opt.btn.prev).click(function () {
+                if (iNow2 == 0) {
+                    iNow2 = img_len - 1;
+                } else {
+                    iNow2--;
+                }
+                lesgo();
+            });
+        }
+        // 下一张
+        if ((typeof opt.btn != "undefined") && (typeof opt.btn.next != "undefined")) {
+            wrap.find(opt.btn.next).click(function () {
+                nextFn();
+            });
+        }
+
+        // 自动播放
+        if (autoPlay) {
+            timer2 = setInterval(nextFn, delay);
+        }
+
+        // 鼠标滑过滑离事件
+        wrap.on({
+            'mouseenter': function () {
+                clearInterval(timer2);
+            }
+        }, {
+            'mouseleave': function () {
+                timer2 = setInterval(nextFn, delay);
+            }
+        });
+        // 运动下一张
+        function nextFn() {
+            if (iNow2 == img_len - 1) {
+                iNow2 = 0;
+            } else {
+                iNow2++;
+            }
+            lesgo();
+        }
+   }
+});
+</script>
+</head>
+<body>
+<div id="box">
+	<div class="img-wrap">
+    	<a href="#1"></a>
+    </div>
+    <ol class="ol">
+    	<li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ol>
+    <span class="prev">&lt;</span>
+    <span class="next">&gt;</span>
+</div>
+</body>
+</html>

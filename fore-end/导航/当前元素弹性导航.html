@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+<meta name="description" content="描述">
+<meta name="keywords" content="关键词1,关键词2">
+<title>导航栏</title>
+<style>
+*{margin:0;padding:0;}
+#box{height:50px;float:left;position:relative;background:#f90;overflow: hidden;}
+#bar{width:64px;height:100%;position:absolute;left:0;top:0;background:#333;}
+#bar .l{width:0;height:100%;background:#333;border-radius:50%;position:absolute;top:0;left:0;}
+#bar .r{width:0;height:100%;background:#333;border-radius:50%;position:absolute;top:0;right:0;}
+#ul{height:100%;font-size:14px;letter-spacing:1px;font-family:"微软雅黑";list-style:none;position:relative;}
+#ul li{height:100%;line-height:50px;float:left;}
+#ul a{height:100%;text-decoration:none;color:#fff;padding:0 20px;display:block;}
+</style>
+</head>
+<body>
+<div id="box">
+	<div id="bar">
+		<div class="l"></div>
+		<div class="r"></div>
+	</div>
+	<ul id="ul">
+		<li><a href="#1">祝</a></li>
+		<li><a href="#2">大家</a></li>
+		<li><a href="#3">在2018</a></li>
+		<li><a href="#4">能顺利</a></li>
+		<li><a href="#5">掌握</a></li>
+		<li><a href="#6">javaScript</a></li>
+	</ul>
+</div>
+
+<script>
+var oBar=document.getElementById("bar"),
+	oRight=oBar.getElementsByClassName("r")[0],
+	oLeft=oBar.getElementsByClassName("l")[0],
+	oUl=document.getElementById("ul"),
+	aLi=oUl.getElementsByTagName("li"),
+	iNow=1;//表示当前哪项高亮
+    oBar.style.left=aLi[iNow].offsetLeft+"px";
+    oBar.style.width=aLi[iNow].offsetWidth+"px";
+    for(var i=0;i<aLi.length;++i){
+    	aLi[i].index=i;
+    	aLi[i].onmouseover=function(){
+			//iNow=this.index;
+    		lesgo(this);
+    	};
+    }
+    oUl.onmouseout=function(){
+    	lesgo(aLi[iNow]);
+	};
+	
+function lesgo(oLi){//效果主要函数
+	var t=Math.abs(oLi.offsetLeft-oBar.offsetLeft)*0.7;
+
+	move(oBar,{left:oLi.offsetLeft,width:oLi.offsetWidth},t,"easeOut",function(){
+
+		move(oRight,{width:0,right:0},80,"linear",function(){
+			oRight.style.background="#f90";
+			move(oRight,{width:20,right:-10},80,"linear",function(){
+				move(oRight,{width:0,right:0},50,"linear");
+			});
+		});
+		move(oLeft,{width:0,left:0},80,"linear",function(){
+			oLeft.style.background="#f90";
+			move(oLeft,{width:20,left:-10},80,"linear",function(){
+				move(oLeft,{width:0,left:0},50,"linear");
+			});
+		});
+	});
+	// iNow++
+	if(oLi.offsetLeft > oBar.offsetLeft){
+		setColor('#333','#f90');
+	// iNow--
+	}else if(oLi.offsetLeft < oBar.offsetLeft){
+		setColor('#f90','#333');
+	}
+	function setColor(color1,color2){		
+		oRight.style.background = color1;
+		oLeft.style.background = color2;
+		move(oRight,{width:40,right:-20},t);
+		move(oLeft,{width:40,left:-20},t);
+	}
+}
+
+//下面都是运动库相关move(元素,属性json,时间,运动类型,运动结束函数)
+function move(t, n, e, r, a) {
+    clearInterval(t.iTimer);
+    var u = e || 1e3,
+        i = {};
+    for (var o in n) i[o] = {}, "opacity" == o ? (i[o].b = Math.round(100 * css(t, o)), i[o].c = 100 * n[o] - i[o].b) : (i[o].b = parseInt(css(t, o)), i[o].c = n[o] - i[o].b);
+    var r = r || "linear",
+        c = (new Date).getTime();
+    t.iTimer = setInterval(function() {
+        var e = (new Date).getTime() - c;
+        e >= u && (e = u);
+        for (var o in n) {
+            var f = Tween[r](e, i[o].b, i[o].c, u);
+            "opacity" == o ? (t.style[o] = f / 100, t.style.filter = "alpha(opacity=" + f + ")") : t.style[o] = f + "px"
+        }
+        e == u && (clearInterval(t.iTimer), a && a.call(t))
+    }, 14)
+    
+}
+function css(t, n) {
+    return t.currentStyle ? t.currentStyle[n] : getComputedStyle(t, !1)[n]
+}
+var Tween = {
+    linear: function(t, n, e, r) {
+        return e * t / r + n
+    },
+    easeIn: function(t, n, e, r) {
+        return e * (t /= r) * t + n
+    },
+    easeOut: function(t, n, e, r) {
+        return -e * (t /= r) * (t - 2) + n
+    },
+    easeBoth: function(t, n, e, r) {
+        return (t /= r / 2) < 1 ? e / 2 * t * t + n : -e / 2 * (--t * (t - 2) - 1) + n
+    },
+    easeInStrong: function(t, n, e, r) {
+        return e * (t /= r) * t * t * t + n
+    },
+    easeOutStrong: function(t, n, e, r) {
+        return -e * ((t = t / r - 1) * t * t * t - 1) + n
+    },
+    easeBothStrong: function(t, n, e, r) {
+        return (t /= r / 2) < 1 ? e / 2 * t * t * t * t + n : -e / 2 * ((t -= 2) * t * t * t - 2) + n
+    },
+    elasticIn: function(t, n, e, r, a, u) {
+        if (0 === t) return n;
+        if (1 == (t /= r)) return n + e;
+        if (u || (u = .3 * r), !a || a < Math.abs(e)) {
+            a = e;
+            var i = u / 4
+        } else var i = u / (2 * Math.PI) * Math.asin(e / a);
+        return -(a * Math.pow(2, 10 * (t -= 1)) * Math.sin(2 * (t * r - i) * Math.PI / u)) + n
+    },
+    elasticOut: function(t, n, e, r, a, u) {
+        if (0 === t) return n;
+        if (1 == (t /= r)) return n + e;
+        if (u || (u = .3 * r), !a || a < Math.abs(e)) {
+            a = e;
+            var i = u / 4
+        } else var i = u / (2 * Math.PI) * Math.asin(e / a);
+        return a * Math.pow(2, -10 * t) * Math.sin(2 * (t * r - i) * Math.PI / u) + e + n
+    },
+    elasticBoth: function(t, n, e, r, a, u) {
+        if (0 === t) return n;
+        if (2 == (t /= r / 2)) return n + e;
+        if (u || (u = .3 * r * 1.5), !a || a < Math.abs(e)) {
+            a = e;
+            var i = u / 4
+        } else var i = u / (2 * Math.PI) * Math.asin(e / a);
+        return 1 > t ? -.5 * a * Math.pow(2, 10 * (t -= 1)) * Math.sin(2 * (t * r - i) * Math.PI / u) + n : a * Math.pow(2, -10 * (t -= 1)) * Math.sin(2 * (t * r - i) * Math.PI / u) * .5 + e + n
+    },
+    backIn: function(t, n, e, r, a) {
+        return "undefined" == typeof a && (a = 1.70158), e * (t /= r) * t * ((a + 1) * t - a) + n
+    },
+    backOut: function(t, n, e, r, a) {
+        return "undefined" == typeof a && (a = 2.0158), e * ((t = t / r - 1) * t * ((a + 1) * t + a) + 1) + n
+    },
+    backBoth: function(t, n, e, r, a) {
+        return "undefined" == typeof a && (a = 1.70158), (t /= r / 2) < 1 ? e / 2 * t * t * (((a *= 1.525) + 1) * t - a) + n : e / 2 * ((t -= 2) * t * (((a *= 1.525) + 1) * t + a) + 2) + n
+    },
+    bounceIn: function(t, n, e, r) {
+        return e - Tween.bounceOut(r - t, 0, e, r) + n
+    },
+    bounceOut: function(t, n, e, r) {
+        return (t /= r) < 1 / 2.75 ? 7.5625 * e * t * t + n : 2 / 2.75 > t ? e * (7.5625 * (t -= 1.5 / 2.75) * t + .75) + n : 2.5 / 2.75 > t ? e * (7.5625 * (t -= 2.25 / 2.75) * t + .9375) + n : e * (7.5625 * (t -= 2.625 / 2.75) * t + .984375) + n
+    },
+    bounceBoth: function(t, n, e, r) {
+        return r / 2 > t ? .5 * Tween.bounceIn(2 * t, 0, e, r) + n : .5 * Tween.bounceOut(2 * t - r, 0, e, r) + .5 * e + n
+    }
+};
+</script>
+</body>
+</html>

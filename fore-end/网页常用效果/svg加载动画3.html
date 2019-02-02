@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>svg </title>
+	<style>
+	circle{ transform:rotate(-90deg);transform-origin:50% 49.7%;}
+	</style>
+    <script>
+    window.onload=function(){
+		// 获取元素
+		var idtxt=document.getElementById('txt');		
+		var progrees=document.getElementById('progress');
+		// 设置初始值
+	    var arcLength=progrees.getTotalLength()// 周长
+		progrees.style.strokeDashoffset=arcLength;
+		progrees.style.strokeDasharray=arcLength;
+
+		// 判断浏览器是否支持 requestAnimationFrame 运动
+		if (!window.requestAnimationFrame) {
+			requestAnimationFrame = function(fn) {
+				setTimeout(fn, 17);
+			};    
+		}
+		if (!window.cancelAnimationFrame) {
+			window.cancelAnimationFrame = function(id) {
+				clearTimeout(id);
+			};
+		}
+
+		// 初始化 时间、 变化的长度
+		var timer = n = null;	
+	
+		// 获取当前毫秒数
+		var startTime = +new Date();    
+		
+		// b ->当前位置  d ->运动总的时间 c-> 运动的距离 目标-当前位置
+		var b = arcLength;
+		var d = 5000;
+		var c = 0-b;
+		timer = requestAnimationFrame(function func(){
+			// t 运动花费的时间
+			var t = d - Math.max(0,startTime - (+new Date()) + d);	
+			
+			// 运动进度条
+			progrees.style.strokeDashoffset= n=t * c / d + b;	
+			
+			// 百分比文字
+			idtxt.textContent=Math.ceil((arcLength-n)/arcLength*100)+'%';
+			
+			// 执行动画
+			timer = requestAnimationFrame(func);
+			// 动画结束
+			if(t == d){
+			  cancelAnimationFrame(timer);
+			}
+		});
+
+	
+		// 取得css 样式
+		function css(t, n) {
+			return t.currentStyle ? t.currentStyle[n] : getComputedStyle(t, false)[n]
+		}
+
+	}
+    </script>
+</head>
+<body>
+<svg width="300" height="300"  xmlns="http://www.w3.org/2000/svg">
+    <circle id="backdrop" r="149" cy="149" cx="149" stroke-width="2" stroke="#333" fill="none"  />
+	<text x='47%' y='48%' fill='red' id='txt'>0%</text>
+    <circle id="progress" r="149" cy="149" cx="149"  stroke-width="3" stroke="orange" fill="none" />
+</svg>
+</body>
+</html>
