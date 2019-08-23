@@ -1,3 +1,15 @@
+// 调用示例
+/*
+html
+<button id="btn">开始运动</button>
+<button id="reset">还原</button>
+<div id="test" style="height: 100px;width: 100px;background-color: pink;position:absolute;left:0;"></div>
+js 
+reset.onclick = function(){history.go();}
+btn.onclick = function(){
+   $(test).animate({width:300},1000,'bounceBoth')
+} 
+*/
 ;(function($){
    $.extend(jQuery.easing,{
     linear: function (p,t, b, c, d){  //匀速
