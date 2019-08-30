@@ -9,10 +9,6 @@
 *php* *ajax*   
 用于多人多个任务 一个人只可点击选择一次，点击用户点击到的就是自己所要执行的任务  
 
-### [分组查看产品表](https://github.com/xue-y/php/tree/master/itemprice) 
-*php*
-不同的营销组访问同样的页面显示不同的项目、产品价格  
-
 ### [OA任务平台](https://github.com/xue-y/php/tree/master/renwu)  
 *Thinkphp 3.2.3*   
 系统用于公司内部各部门问题---统计  
@@ -23,11 +19,11 @@
 
 ### [PHP 备份还原 MySql 数据库](https://github.com/xue-y/backrestore)   
 *php*  
-使用原生php实现mysql数据备份、还原/导入，支持mysql、pdo 两种连接方式  
+使用原生php实现mysql数据备份、还原,支持分卷、压缩
 
 ### [PHP 生成 MySql 数据库字典 ](https://github.com/xue-y/dictionary)  
 *php*   
-验证码类; 备份还原mysql数据类(不包括库,只限于数据表); 数组与其他格式数据互转类  
+备份还原mysql数据类，支持压缩、下载文件 
 
 ### [php 发送邮件](https://github.com/xue-y/email)  
 *php*  
@@ -35,5 +31,5 @@ v1.0 发送单人邮件附件; v2.0 批量发送邮件附件
 
 ### [PHP arrcsv](https://github.com/xue-y/arrcsv)  
 *php*  
-数组导出文件; 文件还原数组 
+数组导出CSV文件; 文件还原数组，支持压缩、下载文件
 
