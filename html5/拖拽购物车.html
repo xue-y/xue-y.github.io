@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style>
+*{padding:0px; margin:0px;}
+ul{margin:0 auto; width:1000px; height:130px;}
+li{list-style:none; float:left; width:200px; height:130px;}
+div{ border:1px solid #000; width:400px; height:300px;margin:0 auto;}
+div p{ height:30px;}
+div p span{ margin:5px;}
+#money{text-align:right;}
+</style>
+<script>
+window.onload=function()
+{
+	var Li=document.getElementsByTagName('li');
+	var Div=document.getElementById('div');
+	var Divchild=Div.getElementsByTagName('p');
+   var obj={};
+   
+   var sum=0;
+   var Money=document.getElementById('money'); 
+	
+	for(var i=0;i<Li.length;i++)
+	{
+	 Li[i].ondragstart=function(ev)
+	 {
+		 var P=this.getElementsByTagName('p');
+		 
+		 ev.dataTransfer.setData('title',P[0].innerHTML);
+		 ev.dataTransfer.setData('money',P[1].innerHTML);
+		 ev.dataTransfer.setDragImage(this,0,0);
+	 }	
+	}//拖拽对象
+	
+	Div.ondragover=function(ev)
+	{
+		ev.preventDefault();	
+   }
+	Div.ondrop=function(ev)
+	{
+		ev.preventDefault();
+		var sTitle=ev.dataTransfer.getData('title');
+		var sMoney=ev.dataTransfer.getData('money');
+		
+		if(!obj[sTitle])
+		{
+		
+		var op=document.createElement('p');
+		var ospan=document.createElement('span');
+			ospan.className='span1';
+			ospan.innerHTML=1;
+			op.appendChild(ospan);
+		var ospan=document.createElement('span');
+		    ospan.className='span2';
+			ospan.innerHTML=sTitle;
+			op.appendChild(ospan);
+		var ospan=document.createElement('span');
+			ospan.innerHTML=sMoney;
+			op.appendChild(ospan);
+		Div.insertBefore(op,Divchild[0]);
+
+		obj[sTitle]=1;
+	   }//---------------------------------第一次添加购物
+		 else
+		 { 
+		  var span1=Div.getElementsByClassName('span1');
+		  var span2=Div.getElementsByClassName('span2');
+		
+		  for(var i=0;i<span2.length;i++)
+			 {
+				if(span2[i].innerHTML==sTitle)
+				{
+					//alert(span2[i].innerHTML);
+					span1[i].innerHTML=parseInt(span1[i].innerHTML)+1;	
+				} 
+			 }
+		 }//------------------------------------累计购物
+		
+		var sNew= sMoney.substring(3);
+		// alert(sNew);
+		sum+=parseInt(sNew);  //数字前面有字符不能直接转为数值，所有substring
+	    Money.innerHTML='总价格：'+sum+'￥';
+	}
+}
+</script>
+</head>
+
+<body>
+<ul>
+  <li draggable="true"><img src="images/excel.jpg"/><p>JavaScript语言精髓</p><p>价格：40￥</p></li>
+  <li draggable="true"><img src="images/ppt.jpg"/><p>point语言精髓</p><p>价格：30￥</p></li>
+  <li draggable="true"><img src="images/qvod.jpg"/><p>视频播放</p><p>价格：40￥</p></li>
+  <li draggable="true"><img src="images/txt.jpg"/><p>文本文档</p><p>价格：40￥</p></li>
+  <li draggable="true"><img src="images/rar.jpg"/><p>压缩文件</p><p>价格：40￥</p></li>
+</ul>
+<div id="div">
+<!--<p>
+<span class="span1">1</span>
+<span class="span2">JavaScript语言精髓</span>
+<span>价格：40￥</span>
+</p>-->
+<p id="money"></p>
+</div>
+</body>
+</html>

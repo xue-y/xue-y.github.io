@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style>
+.yuan {
+	width: 100px;
+	height: 50px;
+	border: 1px solid #06F;
+	border-bottom: 50px solid #06f;
+	border-radius: 152px;
+	position: relative;
+}
+.yuan::after{
+	 content:"";
+	 width:10px;
+	 height:10px;
+	 border:20px solid #06f;
+	 border-radius:50px;
+	 position:absolute;
+	 left:0px;
+	 top:25px;
+	  background:#fff;
+	}
+.yuan::before{
+	 content:"";
+	 width:10px;
+	 height:10px;
+	 border:20px solid #fff;
+	 border-radius:50px;
+	 position:absolute;
+	 right:0px;
+	 top:25px;
+	  background:#06f;
+	}
+
+</style>
+</head>
+
+<body>
+<div class="yuan"></div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<script>
+window.onload=function()
+{
+	var meter=document.getElementById('meter');
+	
+	var pro=document.getElementById('pro');
+	
+	setInterval(function(){pros();},1000);
+	
+	function pros()
+	 {
+	  meter.value+=10/100;
+	  pro.value++;	
+	   if(meter.value==10)
+	  {
+		 meter.value=1;
+	   }//状态条
+	  if(pro.value==100)
+	  {
+		  pro.value=0;
+	   }//进度条
+	}
+}
+</script>
+</head>
+
+<body>
+<meter min="0" max="10" value="4"  low="2" high="8" id="meter">状态条</meter>
+<p><progress max="100" value="50" id="pro">进度条</progress></p>
+</body>
+</html>

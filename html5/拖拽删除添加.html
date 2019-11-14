@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style>
+li {
+	list-style: none;
+	width: 100px;
+	height: 30px;
+	background:#0CC;
+	margin: 10px;
+}
+#div1 {
+	width: 100px;
+	height: 100px;
+	background:#F66;
+}
+</style>
+<script>
+window.onload=function()
+{
+ var Div=document.getElementById('div1');  //目标对象 
+ var Li=document.getElementsByTagName('li');//被拖拽对象
+ var Ul=document.getElementsByTagName('ul')[0];
+ var i=0;	
+ 
+	for(var i=0;i<Li.length;i++)
+	{
+		Li[i].index=i;
+		Li[i].ondragstart=function(ev)
+		{
+			var ev=ev||event;
+			ev.dataTransfer.setData('name',this.index);//兼容火狐
+			this.style.background='#069';	//拖拽前
+		}
+		Li[i].ondrag=function()
+		{
+		//	document.title=i++;	  //拖拽前、拖拽后之间连续触发
+		}
+		Li[i].ondragend=function()
+		{
+			this.style.background='#0CC';	//拖拽后
+		}
+	}//被拖拽元素 
+	
+	Div.ondragenter=function()
+	{
+	 this.style.background='#69F';	//进入目标元素
+	}
+	Div.ondragover=function(ev)//进入目标元素、离开目标元素之间连续触发
+	{
+	  //document.title=i++;	
+	  var ev=ev||event;
+	  ev.preventDefault();//阻止默认事件--可以调用drop
+	  
+	}
+	Div.ondragleave=function()
+	{
+	 this.style.background='#F66';	//离开目标元素
+	}
+	Div.ondrop=function(ev)
+	{
+	// Ul.removeChild(Li[ev.dataTransfer.getData('name')]);//删除对象的li
+	 Div.appendChild(Li[ev.dataTransfer.getData('name')]);//将li 添加到div中
+	 	for(var i=0;i<Li.length;i++)
+		{
+			Li[i].index=i;
+		} //删除后再次对应索引
+	
+	}
+	//--------------------------------------目标元素
+}
+
+
+
+</script>
+</head>
+
+<body>
+<ul>
+  <li draggable="true">a</li>
+  <li draggable="true">b</li>
+  <li draggable="true">c</li>
+</ul>
+<div id="div1"></div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style>
+li {
+	list-style: none;
+	width: 100px;
+	height: 30px;
+	background:#0CC;
+	margin: 10px;
+}
+#div1 {
+	width: 100px;
+	height: 100px;
+	background:#F66;
+}
+</style>
+<script>
+window.onload=function()
+{
+ var Div=document.getElementById('div1');  //目标对象 
+ var Li=document.getElementsByTagName('li');//被拖拽对象
+ var i=0;	
+ 
+	for(var i=0;i<Li.length;i++)
+	{
+		Li[i].ondragstart=function()
+		{
+			this.style.background='#069';	//拖拽前
+		}
+		Li[i].ondrag=function()
+		{
+		//	document.title=i++;	  //拖拽前、拖拽后之间连续触发
+		}
+		Li[i].ondragend=function()
+		{
+			this.style.background='#0CC';	//拖拽后
+		}
+	}//被拖拽元素 
+	
+	Div.ondragenter=function()
+	{
+	 this.style.background='#69F';	//进入目标元素
+	}
+	Div.ondragover=function(ev)//进入目标元素、离开目标元素之间连续触发
+	{
+	  //document.title=i++;	
+	  ev.preventDefault();//阻止默认事件--可以调用drop
+	  
+	}
+	Div.ondragleave=function()
+	{
+	 this.style.background='#F66';	//离开目标元素
+	}
+	Div.ondrop=function()
+	{
+	alert(234);
+	}
+	//--------------------------------------目标元素
+}
+
+
+
+</script>
+</head>
+
+<body>
+<ul>
+  <li draggable="true">a</li>
+  <li draggable="true">b</li>
+  <li draggable="true">c</li>
+</ul>
+<div id="div1"></div>
+</body>
+</html>

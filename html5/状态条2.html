@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style>
+#progress {
+	width: 200px;
+	height: 30px;
+	border: 1px solid #000;
+	position: relative;
+	line-height: 30px;
+}
+#box {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	z-index: 2;
+	width: 100%;
+	height: 30px;
+	text-align: center;
+	color: #FFF;
+	clip: rect(0px,0px,30px,0px);
+	background: #0C6;
+}
+#text {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	z-index: 1;
+	width: 100%;
+	height: 30px;
+	text-align: center;
+	color: #000;
+}
+</style>
+<script>
+window.onload=function()
+{
+    var now=0;//百分比
+	
+	var timer=setInterval(function(){
+		if(now==100)
+		{clearInterval(timer);}
+		else
+		{ now +=1;
+		 progress(now); 
+		}
+		
+		},100);
+		
+
+	function progress(cents)
+	{
+		var Div=document.getElementById('progress');
+		var Box=document.getElementById('box');
+		var Text=document.getElementById('text');
+		
+		var widt=parseInt(getstyle(Div,'width'));
+		
+		Box.innerHTML=cents+'%';
+		Text.innerHTML=cents+'%';
+		Box.style.clip='rect(0px,'+cents/100 * widt+'px,30px,0px)';
+	    
+		document.title=cents/100 * widt;
+	}	
+		
+	  
+		function getstyle(obj,attr)
+			{
+			if(obj.currentStyle)
+			{return obj.currentStyle[attr];}
+			else
+			{return getComputedStyle(obj,false)[attr]}
+   			}	
+
+}
+
+</script>
+</head>
+
+<body>
+<div id="progress">
+  <div id="box">0%</div>
+  <div id="text">0%</div>
+</div>
+</body>
+</html>
